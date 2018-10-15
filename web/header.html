@@ -1,3 +1,39 @@
+<script type="text/javascript">
+	//绑定页面加载事件,向服务器发异步请求判断登陆状态
+	$(function(){
+		$.post(
+			HM.CTX+"/user?action=loginStatus",
+			function(obj){
+					var htmlStr = "";
+					if(obj.flag==1){
+						//登陆了
+						htmlStr = "<li><a href=\"http://www.yanxuemeng.com:8020/web/index.html\">欢迎您"+obj.data.username+"</a></li>\n" +
+        "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">购物车</a></li>\n" +
+        "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">我的订单</a></li>" +
+        "\t\t\t<li><a href=\"http://api.yanxuemeng.com:8080/my_store/user?action=loginOut\">退出</a></li>\n";
+					}else{
+						   htmlStr = "<li><a href=\"http://www.yanxuemeng.com:8020/web/login.html\">登录</a></li>\n" +
+				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/register.html\">注册</a></li>\n" +
+				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">购物车</a></li>\n" +
+				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">我的订单</a></li>";
+					}
+					
+					$("#login-menu").html(htmlStr);
+				
+				
+				
+			},
+			"json"
+		);
+	});
+	
+	
+</script>
+
+
+
+
+
 <div class="container-fluid">
 	<div class="col-md-4">
 		<img src="http://www.yanxuemeng.com:8020/web/resources/img/logo.png" />
