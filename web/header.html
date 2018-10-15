@@ -26,6 +26,27 @@
 			"json"
 		);
 	});
+	//页面加载完毕之后，向服务器获取分类数据
+	$(function(){
+			$.post(
+				HM.CTX+"/category?action=findAllCategory",
+				function(obj){ //var obj = [{pname:},{}]
+					//遍历分类列表
+					var htmlStr = "";
+					for(var i=0; i<obj.length; i++){
+						if(i==0){
+							htmlStr += "<li class=\"active\"><a href=\"http://www.itheima01.com:8020/web/view/product/list.html?cid="+obj[i].cid+"\">"+obj[i].cname+"</a></li>";
+						}else{
+							htmlStr += "<li ><a href=\"http://www.itheima01.com:8020/web/view/product/list.html?cid="+obj[i].cid+"\">"+obj[i].cname+"</a></li>";
+						}
+						
+					}
+					//将拼接好的html串放在页面中
+					$("#cate_list").html(htmlStr);
+				},
+				"json"
+			);
+		});
 	
 	
 </script>

@@ -16,6 +16,40 @@
 				text-decoration: none;
 			}
 		</style>
+		<script type="text/javascript">
+			//获取从index.html传过来的pid
+			var pid = HM.getParameter("pid");
+			//向服务器发异步请求获取商品详细信息
+			$(function(){
+				$.post(
+					HM.CTX+"/product",
+					"action=findProductDetail&pid="+pid,
+					function(obj){
+						if(obj.flag == 1){
+							//1:取出商品信息
+							var product = obj.data;
+							//2:取出分类数据
+							var category= product.category;
+							
+							//3:显示信息
+							$("#categoryId").html(category.cname);
+							$("#pnameId").html(product.pname);
+							$("#pidId").html("编号:"+product.pid);
+							$("#shop_priceId").html(product.shop_price);
+							$("#market_priceId").html("￥"+product.shop_price+"元/份");
+							$("#imgId").attr("src","http://www.yanxuemeng.com:8020/web/"+product.pimage);
+							$("#imgId2").attr("src","http://www.yanxuemeng.com:8020/web/"+product.pimage);
+							$("#pdescId").html(product.pdesc);
+						}else{
+							alert(obj.errorMsg);
+						}
+					},
+					"json"
+				);
+				
+			});
+			
+		</script>
 	</head>
 
 	<body>
@@ -25,22 +59,22 @@
 				<div class="row">
 					<div style="border: 1px solid #e4e4e4;width:930px;margin-bottom:10px;margin:0 auto;padding:10px;margin-bottom:10px;">
 						<a href="./index.html">首页&nbsp;&nbsp;&gt;</a>
-						<a href="./蔬菜分类.html">蔬菜</a>
+						<a href="http://www.yanxuemeng.com:8020/web/view/product/list.html" id="categoryId"></a>
 					</div>
 	
 					<div style="margin:0 auto;width:950px;">
 						<div class="col-md-6">
-							<img style="opacity: 1;width:400px;height:350px;" title="" class="medium" src="http://www.yanxuemeng.com:8020/web/resources/img/loading.gif">
+							<img id="imgId" style="opacity: 1;width:400px;height:350px;" title="" class="medium" src="http://www.yanxuemeng.com:8020/web/resources/img/loading.gif">
 						</div>
 	
 						<div class="col-md-6">
-							<div><strong>大冬瓜</strong></div>
+							<div><strong id="pnameId">大冬瓜</strong></div>
 							<div style="border-bottom: 1px dotted #dddddd;width:350px;margin:10px 0 10px 0;">
-								<div>编号：751</div>
+								<div id="pidId">编号：751</div>
 							</div>
 	
 							<div style="margin:10px 0 10px 0;">
-								一口价: <strong style="color:#ef0101;">&yen;<span>4.44</span>元/份</strong> 参 考 价: <del>￥6.00元/份</del>
+								一口价: <strong style="color:#ef0101;">&yen;<span id="shop_priceId">4.44</span>元/份</strong> 参 考 价: <del id="market_priceId">￥6.00元/份</del>
 							</div>
 	
 							<div style="margin:10px 0 10px 0;">促销: <a target="_blank" title="限时抢购 (2018-07-30 ~ 2018-09-01)" style="background-color: #f07373;">限时抢购</a> </div>
@@ -64,13 +98,13 @@
 						</div>
 	
 						<div>
-							<img src="http://www.yanxuemeng.com:8020/web/resources/img/loading.gif">
+							<img id="imgId2" src="http://www.yanxuemeng.com:8020/web/resources/img/loading.gif">
 						</div>
 	
 						<div style="background-color:#d3d3d3;width:930px;padding:10px 10px;margin:10px 0 10px 0;">
 							<strong>商品参数</strong>
 						</div>
-						<div style="margin-top:10px;width:900px;">
+						<div id="pdescId" style="margin-top:10px;width:900px;">
 							三防智能手机 移动/联通双4G 安全 黑黄色 双4G美国军工IP69 30天长待机 3米防水防摔 北斗
 						</div>
 	

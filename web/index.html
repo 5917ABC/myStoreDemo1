@@ -10,7 +10,50 @@
 		<script type="text/javascript" src="http://www.yanxuemeng.com:8020/web/resources/js/jquery-xuemeng-0.0.1.js" ></script>
 		<script type="text/javascript" src="http://www.yanxuemeng.com:8020/web/resources/js/xuemeng-include.js" ></script>
 	</head>
-
+	<script type="text/javascript">
+		//绑定页面加载事件获取最新和最热商品列表
+		$(function(){
+			$.post(
+				HM.CTX+"/product?action=findNewestAndHot",
+				function(obj){
+					//获取最新和最热商品
+					var newestList = obj.data.newestList;
+					var hotList = obj.data.hotList;
+					//遍历最新商品
+					var htmlStr = "";
+					for(pro_newest of hotList){
+						htmlStr += "<div class=\"col-md-2\" style=\"text-align:center;height:200px;padding:10px 0px;\">\n" +
+					         "\t\t\t\t\t\t<a href=\"http://www.yanxuemeng.com:8020/web/view/product/info.html?pid="+pro_newest.pid+"\">\n" +
+					         "\t\t\t\t\t\t\t<img src=\"http://www.yanxuemeng.com:8020/web/"+pro_newest.pimage+"\" width=\"130\" height=\"130\" style=\"display: inline-block;\">\n" +
+					         "\t\t\t\t\t\t</a>\n" +
+					         "\t\t\t\t\t\t<p><a href=\"http://www.yanxuemeng.com:8020/web/view/product/info.html?pid="+pro_newest.pid+"\" style='color:#666'>"+pro_newest.pname+"</a></p>\n" +
+					         "\t\t\t\t\t\t<p><font color=\"#E4393C\" style=\"font-size:16px\">&yen;"+pro_newest.shop_price+"</font></p>\n" +
+					         "\t\t\t\t\t</div>\n" +
+					         "\t";
+					}
+					$("#newestId").append(htmlStr);
+					
+					//遍历最热商品
+					var htmlStr2 = "";
+					for(pro_hot of hotList){
+						 	   htmlStr2 += "<div class=\"col-md-2\" style=\"text-align:center;height:200px;padding:10px 0px;\">\n" +
+					         "\t\t\t\t\t\t<a href=\"http://www.yanxuemeng.com:8020/web/view/product/info.html?pid="+pro_hot.pid+"\">\n" +
+					         "\t\t\t\t\t\t\t<img src=\"http://www.yanxuemeng.com:8020/web/"+pro_hot.pimage+"\" width=\"130\" height=\"130\" style=\"display: inline-block;\">\n" +
+					         "\t\t\t\t\t\t</a>\n" +
+					         "\t\t\t\t\t\t<p><a href=\"http://www.yanxuemeng.com:8020/web/view/product/info.html?pid="+pro_hot.pid+"\" style='color:#666'>"+pro_hot.pname+"</a></p>\n" +
+					         "\t\t\t\t\t\t<p><font color=\"#E4393C\" style=\"font-size:16px\">&yen;"+pro_hot.shop_price+"</font></p>\n" +
+					         "\t\t\t\t\t</div>\n" +
+					         "\t";
+						 }
+						 $("#hotId").append(htmlStr2);
+					
+					
+				},
+				"json"
+			);
+			
+		});
+	</script>
 	<body>
 		<div class="container-fluid">
 			<div id="header" style="min-height: 130px;"></div>
@@ -65,88 +108,19 @@
             -->
 			<div class="container-fluid">
 				<div class="col-md-12">
-					<h2>热门商品&nbsp;&nbsp;<img src="http://www.yanxuemeng.com:8020/web/resources/img/title2.jpg"/></h2>
+					<h2>最新商品&nbsp;&nbsp;<img src="http://www.yanxuemeng.com:8020/web/resources/img/title2.jpg"/></h2>
 				</div>
 				<div class="col-md-2" style="border:1px solid #E7E7E7;border-right:0;padding:0;">
-					<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/big01.jpg" width="205" height="404" style="display: inline-block;"/>
+					<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/big01.jpg" width="205" height="413" style="display: inline-block;"/>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-10" id="newestId">
 					<div class="col-md-6" style="text-align:center;height:200px;padding:0px;">
 						<a href="product_info.htm">
 							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/middle01.jpg" width="516px" height="200px" style="display: inline-block;">
 						</a>
 					</div>
 				
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small03.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-	
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small04.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-
-					<div class="col-md-2 yes-right-border" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small05.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
 					
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small03.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-	
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small04.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-
-					<div class="col-md-2 yes-right-border" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small05.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small03.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-	
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small04.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small05.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
 				</div>
 			</div>
 			<!--
@@ -163,85 +137,16 @@
 					<h2>热门商品&nbsp;&nbsp;<img src="http://www.yanxuemeng.com:8020/web/resources/img/title2.jpg"/></h2>
 				</div>
 				<div class="col-md-2" style="border:1px solid #E7E7E7;border-right:0;padding:0;">
-					<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/big01.jpg" width="205" height="404" style="display: inline-block;"/>
+					<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/big01.jpg" width="205" height="413" style="display: inline-block;"/>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-10" id="hotId">
 					<div class="col-md-6" style="text-align:center;height:200px;padding:0px;">
 						<a href="product_info.htm">
 							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/middle01.jpg" width="516px" height="200px" style="display: inline-block;">
 						</a>
 					</div>
 				
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small03.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-	
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small04.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-
-					<div class="col-md-2 yes-right-border" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small05.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
 					
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small03.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-	
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small04.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-
-					<div class="col-md-2 yes-right-border" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small05.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small03.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-	
-					<div class="col-md-2" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small04.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
-
-					<div class="col-md-2 yes-right-border" style="text-align:center;height:200px;padding:10px 0px;">
-						<a href="product_info.htm">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/hao/small05.jpg" width="130" height="130" style="display: inline-block;">
-						</a>
-						<p><a href="product_info.html" style='color:#666'>冬瓜</a></p>
-						<p><font color="#E4393C" style="font-size:16px">&yen;299.00</font></p>
-					</div>
 				</div>
 			</div>			
 			<div id="footer"  style="min-height: 203px;"></div>
