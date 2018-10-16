@@ -14,109 +14,112 @@
 
 		<style>
 		</style>
+		<script type="text/javascript">
+			//获取cid
+			var cid = HM.getParameter("cid");
+			//2:获取当前页
+			var curPage = HM.getParameter("curPage");
+			if(curPage == null){
+				curPage = 1;
+			}
+			//3:向服务器发出异步请求
+			$(function(){
+	
+				$.post(
+					
+					HM.CTX+"/product",
+					"action=getProductPage&cid="+cid+"&curPage="+curPage,
+					function(obj){
+						if(obj.flag == 1){
+							//获取pageBean
+							var pageBean = obj.data;
+							//获取每一页的商品列表
+							var productList = pageBean.pageList;
+							//遍历商品列表
+							var htmlStr = "";
+							for(product of productList){
+								 htmlStr += "\t<div class=\"col-md-2\" style='height:240px'>\n" +
+						         "\t\t\t\t\t\t<a href=\"info.html\">\n" +
+						         "\t\t\t\t\t\t\t<img src=\"http://www.yanxuemeng.com:8020/web/"+product.pimage+"\" width=\"170\" height=\"170\" style=\"display: inline-block;\">\n" +
+						         "\t\t\t\t\t\t</a>\n" +
+						         "\t\t\t\t\t\t<p><a href=\"info.htmll\" style='color:green'>"+product.pname+"</a></p>\n" +
+						         "\t\t\t\t\t\t<p><font color=\"#FF0000\">商城价：&yen;"+product.shop_price+"</font></p>\n" +
+						         "\t\t\t\t\t</div>";
+							}
+							//显示页面
+							
+							$("#productListId").html(htmlStr);
+							
+							//拼接前一页
+							htmlStr = "";
+							if(pageBean.curPage == 1){
+								htmlStr += "<li class=\"disabled\"><a href=\"javascript:;\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+							}else{
+								htmlStr += "<li ><a href=\"http://www.yanxuemeng.com:8020/web/view/product/list.html?cid="+cid+"&curPage="+(pageBean.curPage-1)+"\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+							}
+							
+							var start ;//起始页码数
+				            var end ;//页码数
+				            if(pageBean.totalPage <=10){
+				               start = 1;
+				               end = pageBean.totalPage;
+				            }else { //总页数大于10
+				                start = pageBean.curPage - 5;
+				                end = pageBean.curPage + 4;
+				                if(start < 1){
+				                    start = 1;
+				                    end = 10
+				                }
+				                if(end >pageBean.totalPage){
+				                    end = pageBean.totalPage;
+				                    start = pageBean.totalPage - 9;
+				                }
+				            }
+							//拼接中间页码
+							for(var i=start; i<=end; i++){
+								//如果是当前页，则高亮
+								if(pageBean.curPage == i){
+									htmlStr += "<li class=\"active\"><a href=\"http://www.yanxuemeng.com:8020/web/view/product/list.html?cid="+cid+"&curPage="+i+"\">"+i+"</a></li>";
+								}else{
+								   htmlStr += "<li><a href=\"http://www.yanxuemeng.com:8020/web/view/product/list.html?cid="+cid+"&curPage="+i+"\">"+i+"</a></li>";
+								}
+							}
+							
+							
+							//拼接下一页
+							if(pageBean.curPage == pageBean.totalPage){
+							    htmlStr += "<li class=\"disabled\"><a href=\"javascript:;\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+							}else{
+								 htmlStr += "<li ><a href=\"http://www.yanxuemeng.com:8020/web/view/product/list.html?cid="+cid+"&curPage="+(pageBean.curPage+1)+"\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+							}
+							
+						
+							
+						  $("#pageIndexId").html(htmlStr);
+						}else{
+							alert(obj.errorMsg);
+						}
+					},
+					"json"
+				);
+			});
+			
+		</script>
 	</head>
 
 	<body>
 			<div class="container-fluid">
 			<div id="header" style="min-height: 130px;"></div>	
 			<div class="container">
-				<div class="row" style="width:1210px;margin:0 auto;">
+				<div id="productListId" class="row" style="width:1210px;margin:0 auto;">
 		
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10001.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>冬瓜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-		
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10002.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>圆白菜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-		
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10003.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>甜玉米</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-		
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10004.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>胡萝卜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10005.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>芹菜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-		
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10006.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>韭菜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-		
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10007.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>香菜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10008.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>土豆</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10007.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>香菜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10008.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>土豆</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10007.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.htmll" style='color:green'>香菜</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
-					<div class="col-md-2">
-						<a href="info.html">
-							<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/cs10008.jpg" width="170" height="170" style="display: inline-block;">
-						</a>
-						<p><a href="info.html" style='color:green'>土豆</a></p>
-						<p><font color="#FF0000">商城价：&yen;299.00</font></p>
-					</div>
+					
 		
 				</div>
 		
 				<!--分页 -->
 				<div style="width:380px;margin:0 auto;margin-top:50px;">
-					<ul class="pagination" style="text-align:center; margin-top:10px;">
+					<ul id="pageIndexId" class="pagination" style="text-align:center; margin-top:10px;">
 						<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
 						<li class="active"><a href="#">1</a></li>
 						<li><a href="#">2</a></li>
