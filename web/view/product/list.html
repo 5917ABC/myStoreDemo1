@@ -38,11 +38,11 @@
 							//遍历商品列表
 							var htmlStr = "";
 							for(product of productList){
-								 htmlStr += "\t<div class=\"col-md-2\" style='height:240px'>\n" +
-						         "\t\t\t\t\t\t<a href=\"info.html\">\n" +
+								  htmlStr += "\t<div class=\"col-md-2\" style='height:240px'>\n" +
+						         "\t\t\t\t\t\t<a href=\"http://www.yanxuemeng.com:8020/web/view/product/info.html?pid="+product.pid+"\">\n" +
 						         "\t\t\t\t\t\t\t<img src=\"http://www.yanxuemeng.com:8020/web/"+product.pimage+"\" width=\"170\" height=\"170\" style=\"display: inline-block;\">\n" +
 						         "\t\t\t\t\t\t</a>\n" +
-						         "\t\t\t\t\t\t<p><a href=\"info.htmll\" style='color:green'>"+product.pname+"</a></p>\n" +
+						         "\t\t\t\t\t\t<p><a href=\"http://www.yanxuemeng.com:8020/web/view/product/info.html?pid="+product.pid+"\" style='color:green'>"+product.pname+"</a></p>\n" +
 						         "\t\t\t\t\t\t<p><font color=\"#FF0000\">商城价：&yen;"+product.shop_price+"</font></p>\n" +
 						         "\t\t\t\t\t</div>";
 							}

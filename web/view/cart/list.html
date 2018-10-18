@@ -6,13 +6,119 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>购物车</title>
 		<link rel="stylesheet" href="http://www.yanxuemeng.com:8020/web/resources/css/bootstrap.min.css" type="text/css" />
-		<script src="http://www.yanxuemeng.com:8020/web/resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+		<script src="http://www.yanxuemeng.com:8020/web/resources/js/jquery-3.3.1.js" type="text/javascript"></script>
 		<script src="http://www.yanxuemeng.com:8020/web/resources/js/bootstrap.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="http://www.yanxuemeng.com:8020/web/resources/js/jquery-xuemeng-0.0.1.js" ></script>
 		<script type="text/javascript" src="http://www.yanxuemeng.com:8020/web/resources/js/xuemeng-include.js" ></script>
 		<!-- 引入自定义css文件 style.css -->
 		<style>
 		</style>
+		
+		<script type="text/javascript">
+			//页面加载完毕，向服务器发起请求，要整个购物车数据
+			$(function(){
+				$.post(
+					HM.CTX+"/cart",
+					"action=getCart",
+					function(obj){
+						if(obj.flag == 1){
+							//1:获取总金额
+							var total = obj.data.total;
+							//2:获取购物项列表
+							var itemsArray = obj.data.itemsMap;
+					
+							//将数据拼接，显示到页面上
+							$("#totalId").html(total);
+							var  htmlStr = "";
+							for(cartItem of itemsArray){
+								var product = cartItem.product;
+								 htmlStr += "<tr class=\"active\" id=\"cartId\"><td width=\"60\" width=\"40%\">\n" +
+						         "\t\t\t\t\t\t\t\t\t\t<input type=\"hidden\" name=\"id\" value=\"22\">\n" +
+						         "\t\t\t\t\t\t\t\t\t\t<img src=\"http://www.yanxuemeng.com:8020/web/"+product.pimage+"\" width=\"70\" height=\"60\">\n" +
+						         "\t\t\t\t\t\t\t\t\t</td>\n" +
+						         "\t\t\t\t\t\t\t\t\t<td width=\"30%\">\n" +
+						         "\t\t\t\t\t\t\t\t\t\t<a target=\"_blank\">"+product.pname+"</a>\n" +
+						         "\t\t\t\t\t\t\t\t\t</td>\n" +
+						         "\t\t\t\t\t\t\t\t\t<td width=\"20%\">\n" +
+						         "\t\t\t\t\t\t\t\t\t\t￥"+product.shop_price+"\n" +
+						         "\t\t\t\t\t\t\t\t\t</td>\n" +
+						         "\t\t\t\t\t\t\t\t\t<td width=\"10%\">\n" +
+						         "\t\t\t\t\t\t\t\t\t\t"+cartItem.count+"\n" +
+						         "\t\t\t\t\t\t\t\t\t</td>\n" +
+						         "\t\t\t\t\t\t\t\t\t<td width=\"15%\">\n" +
+						         "\t\t\t\t\t\t\t\t\t\t<span class=\"subtotal\">￥"+cartItem.subTotal+"</span>\n" +
+						         "\t\t\t\t\t\t\t\t\t</td>\n" +
+						         "\t\t\t\t\t\t\t\t\t<td>\n" +
+						         "\t\t\t\t\t\t\t\t\t\t<a href=\"javascript:;\" onclick=\"delCartItem('"+product.pid+"')\" class=\"delete\">删除</a>\n" +
+						         "\t\t\t\t\t\t\t\t\t</td></tr>";
+							}
+							//显示
+							$("#cartId").append(htmlStr);
+							
+						}
+					},
+					"json"
+				);
+			});
+			
+			function delCartItem(pid){
+				if(confirm("你确认要删除吗?")){
+					//确定删除
+					$.post(
+						HM.CTX+"/cart",
+						"action=delCartItem&pid="+pid,
+						function(obj){
+							if(obj.flag == 1){
+								//将本页面进行刷新
+								location.reload(true);
+							}
+						},
+						"json"
+					);
+				}
+			}
+			function clearCart(){
+				if(confirm("你确认要清空购物车吗?")){
+					$.post(
+						HM.CTX+"/cart",
+						"action=clearCart",
+						function(obj){
+							if(obj.flag == 1){
+								//将本页面进行刷新
+								location.reload(true);
+							}else{
+								alert(obj.errorMsg);
+							}
+						},
+						"json"
+					);
+				}
+			}
+			
+			
+		function sumbitOrder(){
+			//向服务器发起请求
+			$.post(
+				HM.CTX+"/order",
+				"action=submitOrder",
+				function(obj){
+					if(obj.flag == 1){
+						//用户没登录
+						alert("请登录!");
+						//跳转到登录页面
+						location.href = "http://www.yanxuemeng.com:8020/web/login.html";
+					}
+					if(obj.flag == 2){
+						alert("请添加商品!");
+					}
+					if(obj.flag == 3){
+						location.href="http://www.yanxuemeng.com:8020/web/view/order/info.html?oid="+obj.data;
+					}
+				},
+				"json"
+			);
+		}
+		</script>
 	</head>
 
 	<body>
@@ -24,7 +130,7 @@
 					<div style="margin:0 auto; margin-top:10px;width:950px;">
 						<strong style="font-size:16px;margin:5px 0;">购物车详情</strong>
 						<table class="table table-bordered">
-							<tbody>
+							<tbody id="cartId">
 								<tr class="warning">
 									<th>图片</th>
 									<th>商品</th>
@@ -33,27 +139,7 @@
 									<th>小计</th>
 									<th>操作</th>
 								</tr>
-								<tr class="active">
-									<td width="60" width="40%">
-										<input type="hidden" name="id" value="22">
-										<img src="http://www.yanxuemeng.com:8020/web/resources/products/1/donggua1.jpg" width="70" height="60">
-									</td>
-									<td width="30%">
-										<a target="_blank"> 有机蔬菜      大冬瓜...</a>
-									</td>
-									<td width="20%">
-										￥298.00
-									</td>
-									<td width="10%">
-										2
-									</td>
-									<td width="15%">
-										<span class="subtotal">￥596.00</span>
-									</td>
-									<td>
-										<a href="javascript:;" class="delete">删除</a>
-									</td>
-								</tr>
+								
 							</tbody>
 						</table>
 					</div>
@@ -61,12 +147,12 @@
 	
 				<div style="margin-right:130px;">
 					<div style="text-align:right;">
-						商品金额: <strong style="color:#ff6600;">￥596.00元</strong>
+						商品金额: <strong style="color:#ff6600;">￥<span id="totalId">596.00</span>元</strong>
 					</div>
 					<div style="text-align:right;margin-top:10px;margin-bottom:10px;">
-						<a href="order_info.htm" id="clear" class="clear">清空购物车</a>
-						<a href="order_info.htm">
-							<input type="submit" width="100" value="提交订单" id="submit" border="0" style="background-color:#CD062D;height:35px;width:100px;color:white;">
+						<a href="javascript:;" onclick="clearCart()" id="clear" class="clear">清空购物车</a>
+						<a href="javascript:;">
+							<input type="button" onclick="sumbitOrder()" width="100" value="提交订单" id="buttonId" border="0" style="background-color:#CD062D;height:35px;width:100px;color:white;">
 						</a>
 					</div>
 				</div>

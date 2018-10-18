@@ -49,6 +49,26 @@
 				
 			});
 			
+			
+			//添加购物车
+			function addCart(){
+			
+				//向服务器发起请求
+				//获取购买数量
+				var count = $("#quantity").val();
+				$.post(
+					HM.CTX+"/cart",
+					"action=addCart&pid="+pid+"&count="+count,
+					function(obj){
+				
+						if(obj.flag == 1){
+							location.href = "http://www.yanxuemeng.com:8020/web/view/cart/list.html";
+						}
+					},
+					"json"
+				);
+			}
+			
 		</script>
 	</head>
 
@@ -84,8 +104,8 @@
 									<input id="quantity" name="quantity" value="1" maxlength="4" size="10" type="text"> </div>
 	
 								<div style="margin:20px 0px 10px 0px;padding-left: 70px;">
-									<a href="cart.htm">
-										<input style="background: url('http://www.yanxuemeng.com:8020/web/resources/img/product.gif') no-repeat scroll 0 -600px rgba(0, 0, 0, 0);height:36px;width:127px;" value="加入购物车" type="button">
+									<a href="javascript:;" >
+										<input onclick="addCart()" type="button" style="background: url('http://www.yanxuemeng.com:8020/web/resources/img/product.gif') no-repeat scroll 0 -600px rgba(0, 0, 0, 0);height:36px;width:127px;" value="加入购物车" type="button">
 									</a> 
 								</div>
 							</div>
