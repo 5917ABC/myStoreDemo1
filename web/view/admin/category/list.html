@@ -15,7 +15,60 @@
 			}
 			
 		</style>
-		<script>
+		<script type="text/javascript">
+		$(function(){
+		 	$.post(
+		 		HM.CTX+"/category",
+		 		"action=findAllCategory",
+		 		function(categoryList){ //var categoryList = [{"cid":,"cname":},{}]
+		 			var htmlStr = "";
+		 			for(var i=0; i<categoryList.length; i++){
+		 				var flag = i % 2?"cate_tr tr_odd":"cate_tr tr_even";
+	 				   htmlStr += "\t\t<tr class=\""+flag+"\" >\n" +
+				          "\t\t\t\t\t\t\t\t<td>\n" +
+				          "\t\t\t\t\t\t\t\t\t"+(i+1)+"\n" +
+				          "\t\t\t\t\t\t\t\t</td>\n" +
+				          "\t\t\t\t\t\t\t\t<td>\n" +
+				          "\t\t\t\t\t\t\t\t\t"+categoryList[i].cname+"\n" +
+				          "\t\t\t\t\t\t\t\t</td>\n" +
+				          "\t\t\t\t\t\t\t\t<td >\n" +
+				          "\t\t\t\t\t\t\t\t\t<a href=\"http://www.yanxuemeng.com:8020/web/view/admin/category/edit.html?cid="+categoryList[i].cid+"\" class=\"a_button_edit\"></a>\n" +
+				          "\t\t\t\t\t\t\t\t\t&nbsp;&nbsp;\n" +
+				          "\t\t\t\t\t\t\t\t\t<a href=\"#\" onclick=\"delCategoryFn('"+categoryList[i].cid+"')\" class=\"a_button_del\"></a>\n" +
+				          "\t\t\t\t\t\t\t\t</td>\n" +
+				          "\t\t\t\t\t\t\t</tr>";
+	 				
+		 				
+		 			}
+		 			//显示页面
+		 			$("#categroyId").append(htmlStr);
+		 			
+		 		},
+		 		"json"
+		 	);
+		 });
+		
+		 function delCategoryFn(cid){
+		 	//弹框提醒您
+		 	if(confirm("你确定要删除吗?")){
+		 		//向服务器发出异步请求,携带cid
+		 		$.post(
+		 			HM.CTX+"/category",
+		 			"action=delCategory&cid="+cid,
+		 			function(obj){
+		 				if(obj.flag == 4){
+		 					location.reload(true);
+
+		 				}else{
+		 					alert(obj.errorMsg);
+		 				}
+		 			},
+		 			"json"
+		 		);
+		 	}
+		 }
+			
+			
 		</script>
 	</head>
 	<body>
@@ -33,7 +86,7 @@
 				</tr>
 				<tr>
 					<td>
-						<table cellspacing="0"   bordercolor="gray" border="1" style="width:100%;BORDER-COLLAPSE:collapse;">
+						<table id="categroyId" cellspacing="0"   bordercolor="gray" border="1" style="width:100%;BORDER-COLLAPSE:collapse;">
 							<tr style="FONT-WEIGHT: bold; FONT-SIZE: 12pt; HEIGHT: 25px; BACKGROUND-COLOR: #afd1f3;text-align: center;">
 								<td width="18%">
 									序号
@@ -45,45 +98,7 @@
 									操作
 								</td>
 							</tr>
-							<tr class="cate_tr tr_odd" >
-								<td>
-									1
-								</td>
-								<td>
-									手机数码
-								</td>
-								<td >
-									<a href="http://www.yanxuemeng.com:8020/web/view/admin/category/edit.html" class="a_button_edit"></a>
-									&nbsp;&nbsp;
-									<a href="#" onclick="return confirm('您确定要删除吗？')" class="a_button_del"></a>
-								</td>
-							</tr>
-							<tr class="cate_tr tr_even" >
-								<td>
-									2
-								</td>
-								<td>
-									电脑办公
-								</td>
-								<td>
-									<a href="http://www.yanxuemeng.com:8020/web/view/admin/category/edit.html" class="a_button_edit"></a>
-									&nbsp;&nbsp;
-									<a href="#" onclick="return confirm('您确定要删除吗？')" class="a_button_del"></a>
-								</td>
-							</tr>
-							<tr class="cate_tr tr_odd" >
-								<td>
-									3
-								</td>
-								<td>
-									母婴用品
-								</td>
-								<td>
-									<a href="http://www.yanxuemeng.com:8020/web/view/admin/category/edit.html" class="a_button_edit"></a>
-									&nbsp;&nbsp;
-									<a href="#" onclick="return confirm('您确定要删除吗？')" class="a_button_del"></a>
-								</td>
-							</tr>
+							
 						</table>
 					</td>
 				</tr>

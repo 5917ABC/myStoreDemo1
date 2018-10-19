@@ -9,13 +9,13 @@
 						//登陆了
 						htmlStr = "<li><a href=\"http://www.yanxuemeng.com:8020/web/index.html\">欢迎您"+obj.data.username+"</a></li>\n" +
         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">购物车</a></li>\n" +
-        "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">我的订单</a></li>" +
+        "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/order/list.html\">我的订单</a></li>" +
         "\t\t\t<li><a href=\"http://api.yanxuemeng.com:8080/my_store/user?action=loginOut\">退出</a></li>\n";
 					}else{
 						   htmlStr = "<li><a href=\"http://www.yanxuemeng.com:8020/web/login.html\">登录</a></li>\n" +
 				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/register.html\">注册</a></li>\n" +
 				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">购物车</a></li>\n" +
-				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/cart/list.html\">我的订单</a></li>";
+				         "\t\t\t<li><a href=\"http://www.yanxuemeng.com:8020/web/view/order/list.html\">我的订单</a></li>";
 					}
 					
 					$("#login-menu").html(htmlStr);
