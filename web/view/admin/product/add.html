@@ -6,15 +6,39 @@
 		<link rel="stylesheet" href="http://www.yanxuemeng.com:8020/web/resources/css/back.css" />
 		<script src="http://www.yanxuemeng.com:8020/web/resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="http://www.yanxuemeng.com:8020/web/resources/js/jquery-xuemeng-0.0.1.js" ></script>
-		<script>
+		<script type="text/javascript">
 			$(function(){
-				$("#save").click(function(){
-					HM.ajaxFile("/addProduct","productForm",function(data){
-						alert(data.message);
-						location.href="list.html";
-					})
-				})
-			})
+				$.post(
+					HM.CTX+"/category",
+					"action=findAllCategory",
+					function(obj){
+						var htmlStr = "";
+						for(category of obj){
+							htmlStr += "<option value=\""+category.cid+"\">"+category.cname+"</option>";
+						}
+						$("#categoryListId").append(htmlStr);
+					},
+					"json"
+				);
+			});
+			
+			
+			function addProductFn(){
+				
+				/*
+				 * 向服务器发出异步请求，携带表单中所有参数
+			 * 参1：表示服务器的servlet访问路径
+			 * 参2：表示表单的id
+			 * 参3：接收响应回调函数
+				 */
+				HM.ajaxFile("/upload","productForm",function(obj){
+					location.href=HM.WebUrl+"/view/admin/product/list.html";
+				});
+				
+			}
+			
+			
+			
 			
 		</script>
 	</head>
@@ -73,11 +97,9 @@
 						所属的分类：
 					</td>
 					<td  bgColor="#ffffff" colspan="3">
-						<select name="cid">
+						<select name="cid" id="categoryListId">
 							<option value="">--请选择--</option>
-								<option value="1">手机数码</option>
-								<option value="2">电脑办公</option>
-								<option value="3">母婴用品</option>
+								
 						</select>
 						
 						
@@ -94,7 +116,7 @@
 				<tr>
 					<td  style="WIDTH: 100%" align="center"
 						bgColor="#f5fafe" colSpan="4">
-						<button type="button" id="save">
+						<button type="button" id="save" onclick="addProductFn()">
 							&#30830;&#23450;
 						</button>
 						<FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>

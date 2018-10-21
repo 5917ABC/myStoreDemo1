@@ -15,6 +15,117 @@
 			}
 			
 		</style>
+		<script type="text/javascript">
+			//获取当前页码
+			var curPage = HM.getParameter("curPage");
+			if(curPage==null){
+				curPage=1;
+			}
+			//页面加载事件
+			$(function(){
+				$.post(
+					HM.CTX+"/admin",
+					"action=getProductPage&curPage="+curPage,
+					function(obj){
+						if(obj.flag==4){
+							//获取pageBean
+							var pageBean = obj.data;
+							//获取每一页商品列表
+							var productList = pageBean.pageList;
+							//遍历
+							var htmlStr = "";
+							for (var i =0;i<productList.length;i++) {
+								var product = productList[i];
+								htmlStr += "<tr class=\"tr_odd prod_tr\">\n" +
+						          "\t\t\t\t\t\t\t\t\t<td >\n" +
+						          "\t\t\t\t\t\t\t\t\t\t"+((pageBean.curPage-1)*pageBean.pageSize+(i+1))+"\n" +
+						          "\t\t\t\t\t\t\t\t\t</td>\n" +
+						          "\t\t\t\t\t\t\t\t\t<td >\n" +
+						          "\t\t\t\t\t\t\t\t\t\t"+product.pname+"\n" +
+						          "\t\t\t\t\t\t\t\t\t</td>\n" +
+						          "\t\t\t\t\t\t\t\t\t<td align=\"left\" >\n" +
+						          "\t\t\t\t\t\t\t\t\t\t"+product.pdesc+"\n" +
+						          "\t\t\t\t\t\t\t\t\t</td>\n" +
+						          "\t\t\t\t\t\t\t\t\t<td >\n" +
+						          "\t\t\t\t\t\t\t\t\t\t"+product.shop_price+"\n" +
+						          "\t\t\t\t\t\t\t\t\t</td>\n" +
+						          "\t\t\t\t\t\t\t\t\t<td >\n" +
+						          "\t\t\t\t\t\t\t\t\t\t\t"+(product.is_hot==1?"是":"否")+"\n" +
+						          "\t\t\t\t\t\t\t\t\t</td>\n" +
+						          "\t\t\t\t\t\t\t\t\t<td >\n" +
+						          "\t\t\t\t\t\t\t\t\t\t<img width=\"40\" src=\"http://www.yanxuemeng.com:8020/web/"+product.pimage+"\">\n" +
+						          "\t\t\t\t\t\t\t\t\t</td>\n" +
+						          "\t\t\t\t\t\t\t\t</tr>";
+								
+								
+							}
+							//显示页面
+							$("#productListId").append(htmlStr);
+							htmlStr = "";
+							//拼接首页
+							htmlStr += "<a href=\"http://www.yanxuemeng.com:8020/web/view/admin/product/list.html?curPage=1\">首页</a>|";
+							//拼接前一页
+							
+							if(pageBean.curPage == 1){
+								htmlStr += "<a disabled='disabled' href=\"javascript:;\">上一页</a>|";
+							}else{
+								htmlStr += "<a href=\"http://www.yanxuemeng.com:8020/web/view/admin/product/list.html?curPage="+(pageBean.curPage-1)+"\">上一页</a>|";
+							}
+							
+							var start ;//起始页码数
+				            var end ;//页码数
+				            if(pageBean.totalPage <=10){
+				               start = 1;
+				               end = pageBean.totalPage;
+				            }else { //总页数大于10
+				                start = pageBean.curPage - 5;
+				                end = pageBean.curPage + 4;
+				                if(start < 1){
+				                    start = 1;
+				                    end = 10
+				                }
+				                if(end >pageBean.totalPage){
+				                    end = pageBean.totalPage;
+				                    start = pageBean.totalPage - 9;
+				                }
+				            }
+							//拼接中间页码
+							for(var i=start; i<=end; i++){
+								//如果是当前页，则高亮
+								if(pageBean.curPage == i){
+									htmlStr += "<a style='color:red' href=\"http://www.yanxuemeng.com:8020/web/view/admin/product/list.html?curPage="+i+"\">"+i+"</a>|";
+								}else{
+								   htmlStr += "<a href=\"http://www.yanxuemeng.com:8020/web/view/admin/product/list.html?curPage="+i+"\">"+i+"</a>|";
+								}
+							}
+							
+							
+							//拼接下一页
+							if(pageBean.curPage == pageBean.totalPage){
+							    htmlStr += "<a disabled='disabled' href=\"javascript:;\">下一页</a>|";
+							}else{
+								 htmlStr += "<a href=\"http://www.yanxuemeng.com:8020/web/view/admin/product/list.html?curPage="+(pageBean.curPage+1)+"\">下一页</a>|";
+							}
+							htmlStr += "<a href=\"http://www.yanxuemeng.com:8020/web/view/admin/product/list.html?curPage="+pageBean.totalPage+"\">尾页</a>|";
+							htmlStr += "第"+pageBean.curPage+"页/共"+pageBean.totalPage+"页/共"+pageBean.count+"条 ";
+						  $("#pageIndexId").html(htmlStr);
+							
+						}else{
+							alert(obj.errorMsg);
+						}
+						
+						
+						
+					},
+					"json"
+					
+				);
+			});
+			
+			
+			
+			
+		</script>
 	</head>
 	<body>
 		<table cellSpacing="1" cellPadding="0" width="100%" align="center" bgColor="#f5fafe" border="0">
@@ -31,7 +142,7 @@
 					</tr>
 					<tr>
 						<td  align="center" bgColor="#f5fafe">
-							<table cellspacing="0" cellpadding="1" bordercolor="gray" border="1" style=" WIDTH: 100%; WORD-BREAK: break-all;BORDER-COLLAPSE: collapse; WORD-WRAP: break-word">
+							<table id="productListId" cellspacing="0" cellpadding="1" bordercolor="gray" border="1" style=" WIDTH: 100%; WORD-BREAK: break-all;BORDER-COLLAPSE: collapse; WORD-WRAP: break-word">
 								<tr style="FONT-WEIGHT: bold; FONT-SIZE: 12pt; HEIGHT: 25px; BACKGROUND-COLOR: #afd1f3;text-align: center;">
 									<td width="7%">
 										序号
@@ -53,241 +164,13 @@
 									</td>
 									
 								</tr>
-								<tr class="tr_odd prod_tr">
-									<td >
-										1
-									</td>
-									<td >
-										小米4c
-									</td>
-									<td align="left" >
-										小米4c手机性能好价格低啊小米4c手机性能好价格低啊小米4c手机性能好价格低啊小米4c手性能好价格低啊
-									</td>
-									<td >
-										1799
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0001.jpg">
-									</td>
-								</tr>
-								<tr class="tr_even prod_tr">
-									<td >
-										2
-									</td>
-									<td >
-										华为Mate7
-									</td>
-									<td align="left" >
-										华为 Ascend Mate7 月光银 移动4G手机 双卡双待双通6英寸高清大屏，纤薄机身，智能超八核，按压式指纹识别！!选择下方“移动老用户4G飞享合约”，无需换号，还有话费每月返还！
-									</td>
-									<td >
-										2599
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0002.jpg">
-									</td>
-								</tr>
-								<tr class="tr_odd prod_tr">
-									<td >
-										3
-									</td>
-									<td >
-										vivo20s
-									</td>
-									<td align="left" >
-										移动联通双4G手机 3G运存版 极光白【购机送蓝牙耳机+蓝牙自拍杆】新升级3G运行内存·双2.5D弧面玻璃·眼球识别技术
-									</td>
-									<td >
-										1799
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0003.jpg">
-									</td>
-								</tr>
-								<tr class="tr_even prod_tr">
-									<td >
-										2
-									</td>
-									<td >
-										华为Mate7
-									</td>
-									<td align="left" >
-										华为 Ascend Mate7 月光银 移动4G手机 双卡双待双通6英寸高清大屏，纤薄机身，智能超八核，按压式指纹识别！!选择下方“移动老用户4G飞享合约”，无需换号，还有话费每月返还！
-									</td>
-									<td >
-										2599
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0002.jpg">
-									</td>
-								</tr>
-								<tr class="tr_odd prod_tr">
-									<td >
-										3
-									</td>
-									<td >
-										vivo20s
-									</td>
-									<td align="left" >
-										移动联通双4G手机 3G运存版 极光白【购机送蓝牙耳机+蓝牙自拍杆】新升级3G运行内存·双2.5D弧面玻璃·眼球识别技术
-									</td>
-									<td >
-										1799
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0003.jpg">
-									</td>
-								</tr>
-								<tr class="tr_even prod_tr">
-									<td >
-										2
-									</td>
-									<td >
-										华为Mate7
-									</td>
-									<td align="left" >
-										华为 Ascend Mate7 月光银 移动4G手机 双卡双待双通6英寸高清大屏，纤薄机身，智能超八核，按压式指纹识别！!选择下方“移动老用户4G飞享合约”，无需换号，还有话费每月返还！
-									</td>
-									<td >
-										2599
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0002.jpg">
-									</td>
-								</tr>
-								<tr class="tr_odd prod_tr">
-									<td >
-										3
-									</td>
-									<td >
-										vivo20s
-									</td>
-									<td align="left" >
-										移动联通双4G手机 3G运存版 极光白【购机送蓝牙耳机+蓝牙自拍杆】新升级3G运行内存·双2.5D弧面玻璃·眼球识别技术
-									</td>
-									<td >
-										1799
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0003.jpg">
-									</td>
-								</tr>
-								<tr class="tr_even prod_tr">
-									<td >
-										2
-									</td>
-									<td >
-										华为Mate7
-									</td>
-									<td align="left" >
-										华为 Ascend Mate7 月光银 移动4G手机 双卡双待双通6英寸高清大屏，纤薄机身，智能超八核，按压式指纹识别！!选择下方“移动老用户4G飞享合约”，无需换号，还有话费每月返还！
-									</td>
-									<td >
-										2599
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0002.jpg">
-									</td>
-								</tr>
-								<tr class="tr_odd prod_tr">
-									<td >
-										3
-									</td>
-									<td >
-										vivo20s
-									</td>
-									<td align="left" >
-										移动联通双4G手机 3G运存版 极光白【购机送蓝牙耳机+蓝牙自拍杆】新升级3G运行内存·双2.5D弧面玻璃·眼球识别技术
-									</td>
-									<td >
-										1799
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0003.jpg">
-									</td>
-								</tr>
-								<tr class="tr_even prod_tr">
-									<td >
-										2
-									</td>
-									<td >
-										华为Mate7
-									</td>
-									<td align="left" >
-										华为 Ascend Mate7 月光银 移动4G手机 双卡双待双通6英寸高清大屏，纤薄机身，智能超八核，按压式指纹识别！!选择下方“移动老用户4G飞享合约”，无需换号，还有话费每月返还！
-									</td>
-									<td >
-										2599
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0002.jpg">
-									</td>
-								</tr>
-								<tr class="tr_odd prod_tr">
-									<td >
-										3
-									</td>
-									<td >
-										vivo20s
-									</td>
-									<td align="left" >
-										移动联通双4G手机 3G运存版 极光白【购机送蓝牙耳机+蓝牙自拍杆】新升级3G运行内存·双2.5D弧面玻璃·眼球识别技术
-									</td>
-									<td >
-										1799
-									</td>
-									<td >
-											是
-									</td>
-									<td >
-										<img width="40" src="http://www.yanxuemeng.com:8020/web/resources/products/1/c_0003.jpg">
-									</td>
-								</tr>
+								
 							</table>
 						</td>
 					</tr>
 					<tr align="center">
-						<td colspan="7">
-								<a href="#">首页</a>|
-								<a href="#">上一页</a>|
-								<a href="#">1</a>
-								<a href="#">2</a>
-								<a href="#">3</a>
-								<a href="#">4</a>
-								<a href="#">5</a>
-								<a href="#">下一页</a>|
-								<a href="#">尾页</a>|
-								第1页/共10页/共25条 
+						<td colspan="7" id="pageIndexId">
+								
 						</td>
 					</tr>
 				</tbody>
